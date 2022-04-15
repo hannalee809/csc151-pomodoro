@@ -19,6 +19,8 @@ short_text = Text.new('Short Break', x: 350, y: 130, size: 20)
 long_text = Text.new('Long Break', x: 475, y: 130, size: 20)
 timer_clock = Text.new("#{timer_num}", x: 320, y: 200, size: 75)
 
+timer_on_off = false
+
 # timer class
 class Timer
     
@@ -30,6 +32,9 @@ class Timer
         countdown_time_in_seconds.downto(0) do |seconds|
           timer_num =  (t + seconds).strftime('%M:%S')
           sleep 1
+          puts timer_num
+        #   $timer_clock.remove
+          timer_clock = Text.new("#{timer_num}", x: 320, y: 200, size: 75)
         end
     
     end
@@ -44,7 +49,15 @@ class Timer
 end
 # Load and position timer screen
 update do 
-    timer_clock = Text.new("#{timer_num}", x: 320, y: 200, size: 75)
+    # puts "test"
+    if timer_on_off == true
+        Timer.new.timer_start(len = timer_len)
+        timer_on_off = false
+    end
+
+    # remove the timer clock
+    # timer_clock.remove
+    # timer_clock = Text.new("#{timer_num}", x: 320, y: 200, size: 75)
 end
 
 on :mouse_down do |event|
@@ -60,7 +73,7 @@ on :mouse_down do |event|
     if short_text.contains? event.x, event.y
         puts "Short Break"
         #Timer.new.timer_start(len = )
-        timer_len = 300
+        timer_len = 15
     end
 
     # if long break clicked
@@ -71,7 +84,8 @@ on :mouse_down do |event|
 
     if start_text.contains? event.x, event.y
         puts timer_len
-        Timer.new.timer_start(len = timer_len)
+        timer_on_off = true
+       # Timer.new.timer_start(len = timer_len)
     end
 
 end
