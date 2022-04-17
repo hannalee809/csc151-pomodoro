@@ -1,6 +1,9 @@
 # Starter file for timer app
+#$: << "."
 require 'ruby2d'
 require 'csv'
+#require './settings.rb'
+
 
 # def csv_check(file_name)
 #     if(File.exist?(file_name))
@@ -42,8 +45,13 @@ timer_len = 0
 timer_on_off = false
 pomodoro_on_off = false
 stop_timer = false
-
+settings_on_off = false
 csv_array = Array.new
+
+# default values for timer settings
+pom_num = 15
+short_break = 15
+long_break = 15
 
 
 # draw out timer elements
@@ -56,8 +64,63 @@ pom_text = Text.new('Pomodoro', x: 225, y: 130, size: 20)
 short_text = Text.new('Short Break', x: 350, y: 130, size: 20)
 long_text = Text.new('Long Break', x: 475, y: 130, size: 20)
 timer_clock = Text.new("#{timer_num}", x: 320, y: 200, size: 75)
+settings_text = Text.new('Settings', x: 700, y: 10, size: 20, color: '#4297A0')
 
+def settings(pom_num, long_break, short_break)
+    # set title: "Settings"
+    # set width: 800
+    # set height: 600
+    # set background: '#F4EAE6'
+    
+    # draw out settings' elements
+    settings_box = Rectangle.new(x: 10, y: 125, width: 180, height: 300, color: '#4297A0')
+    time_text = Text.new('Time (minutes)', x: 15, y: 130, size: 25)
+    exit_button = Rectangle.new(x: 175, y: 125, width: 15, height: 15, color: 'red')
+    exit_text = Text.new('X', x: 175, y: 125, size: 15)
 
+    pom_text = Text.new('Pomodoro:', x: 15, y: 185, size: 15)
+    short_text = Text.new('Short Break:', x: 15, y: 235, size: 15)
+    long_text = Text.new('Long Break:', x: 15, y: 285, size: 15)
+
+    alarm_text = Text.new('Alarm Sound', x: 15, y: 335, size: 25)
+
+    puts 'Enter an amount of minutes for Pomodoro timer:'
+    pom_num = gets.chomp.to_i
+
+    puts 'Enter an amount of minutes for short break:'
+    short_break = gets.chomp.to_i
+
+    puts 'Enter an amoung of minutes for long break:'
+    long_break = gets.chomp.to_i
+    
+
+    #  on :mouse_down do |event|
+    #     if pom_text.contains?(event.x, event.y)
+    #         puts 'Enter an amount of minutes for Pomodoro timer:'
+    #         pom_num = gets.chomp.to_i
+    #         return pom_num
+    #     end
+
+    #     if short_text.contains?(event.x, event.y)
+    #         puts 'Enter an amount of minutes for short break:'
+    #         short_break = gets.chomp.to_i
+    #         return short_break
+    #     end
+
+    #     if long_text.contains?(event.x, event.y)
+    #         puts 'Enter an amoung of minutes for long break:'
+    #         long_break = gets.chomp.to_i
+    #         return long_break
+    #     end
+
+    #     if alarm_text.contains?(event.x, event.y)
+    #         puts 'Enter an alarm sound from this list:...'
+    #         alarm_sound = gets
+    #         alarm_sound = alarm_sound.chomp
+    #     end
+    # end
+
+end
 # timer class
 #class Timer
     
@@ -117,6 +180,13 @@ on :mouse_down do |event|
         stop_timer = true
         timer_on_off = false
     end
+
+    if settings_text.contains? event.x, event.y
+        puts "settings clicked"
+        settings_on_off = true
+        
+
+    end
 end
 
 update do
@@ -149,6 +219,10 @@ update do
         else
             puts "because this was a short/break, this will not be recorded"
         end
+      
+    end
+    if settings_on_off == true
+        settings(15, 15, 15)
     end
 end
 
