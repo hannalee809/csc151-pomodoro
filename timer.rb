@@ -92,8 +92,9 @@ def settings(pom_num, long_break, short_break)
 
     puts 'Enter an amoung of minutes for long break:'
     long_break = gets.chomp.to_i
-    
 
+    settings_on_off = false
+    
     #  on :mouse_down do |event|
     #     if pom_text.contains?(event.x, event.y)
     #         puts 'Enter an amount of minutes for Pomodoro timer:'
@@ -153,27 +154,26 @@ on :mouse_down do |event|
     # if pomodoro text clicked - len is 1500
     if pom_text.contains? event.x, event.y
        puts "Pomodoro" 
-       timer_len = 15
+       timer_len = 1500
        pomodoro_on_off = true
     end
 
     # if short break clicked - len is 300
     if short_text.contains? event.x, event.y
         puts "Short Break"
-        #Timer.new.timer_start(len = )
-        timer_len = 15
+        #Timer.new.timer_start(len = 300)
+        timer_len = 300
     end
 
     # if long break clicked - len is 900
     if long_text.contains? event.x, event.y
         puts "Long break"
-        timer_len = 15
+        timer_len = 900
     end
 
     if start_text.contains? event.x, event.y
         puts timer_len
         timer_on_off = true
-       # Timer.new.timer_start(len = timer_len)
     end
  
     if stop_text.contains? event.x, event.y
@@ -196,15 +196,18 @@ update do
         # creates the time instance for the csv file
         csv_time = Time.now
         puts csv_time
+        
 
         # for the countdown
         t = Time.new(0)
         timer_num = timer_len
         timer_len.downto(0) do |seconds|
           timer_num =  (t + seconds).strftime('%M:%S')
-          sleep 1
-          timer_clock.text = "#{timer_num}"
+           sleep 1
+        #   timer_clock.text = "#{timer_num}"
           puts timer_num
+          break if stop_timer == true
+
         end
         timer_on_off = false
 
@@ -222,7 +225,11 @@ update do
       
     end
     if settings_on_off == true
-        settings(15, 15, 15)
+        settings(15, 15, 15) 
+        break if settings_on_off == false
+        puts pom_num
+        puts short_break
+        puts long_break
     end
 end
 
