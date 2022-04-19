@@ -5,20 +5,29 @@ require 'csv'
 #require './settings.rb'
 
 
-# def csv_check(file_name)
-#     if(File.exist?(file_name))
-#         puts 'file exists'
-#     else 
-#         puts 'file does not found'
-#         CSV.open(file_name, mode 'w') do |csv|
-#             csv << 
-#         file_name = CSV.new(string_or_io, **options)
+def csv_check(file_name, array)
+    if(File.exist?(file_name))
+        puts 'file exists'
+        CSV.open(file_name, "a") do |csv|
+            array.each do |pomtime|
+                csv << pomtime
+            end
+        end
+    else 
+        puts 'file does not found'
+        headers = ["Timestamp", "PomodoroLength"]
+        CSV.open(file_name, "w") do |csv|
+            csv << headers
+            array.each do |pomtime|
+                csv << pomtime
+            end
+        end
         
-#     end
+    end
     
-# end
+end
 
-# def csv_write(file_name, date, time, )
+# def csv_write(file_name, date, time )
 #     CSV.open(file_name, 'wb') do |csv|
 #         csv << ['Date', 'Time', 'Pomodoro']
 #         csv <<  [Time.new]
@@ -154,7 +163,7 @@ on :mouse_down do |event|
     # if pomodoro text clicked - len is 1500
     if pom_text.contains? event.x, event.y
        puts "Pomodoro" 
-       timer_len = 1500
+       timer_len = 5
        pomodoro_on_off = true
     end
 
@@ -218,12 +227,15 @@ update do
             puts "csv_pomodoro is #{csv_pomodoro}"
             csv_array << [csv_time, csv_pomodoro]
             puts csv_array
+            csv_check("pomodoro.csv", csv_array)
+            csv_array.pop
 
         else
             puts "because this was a short/break, this will not be recorded"
         end
       
     end
+
     if settings_on_off == true
         settings(15, 15, 15) 
         break if settings_on_off == false
