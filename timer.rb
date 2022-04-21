@@ -198,6 +198,8 @@ on :mouse_down do |event|
     end
 end
 
+tick = 0
+timer_count = 0
 update do
     if timer_on_off == true
         puts 'start has been pressed'
@@ -209,16 +211,29 @@ update do
 
         # for the countdown
         t = Time.new(0)
-        timer_num = timer_len
-        timer_len.downto(0) do |seconds|
-          timer_num =  (t + seconds).strftime('%M:%S')
-           sleep 1
-        #   timer_clock.text = "#{timer_num}"
-          puts timer_num
-          break if stop_timer == true
-
+        if timer_count > timer_len
+            break
+        else
+            if tick % 60 == 0
+                timer_count += 1
+                # timer_count = (t + 1).strftime('%M:%S')
+                timer_clock.text = timer_count.parsestrptime('%M:%S')
+                # timer_clock.text = Time.at(timer_count)
+            end
+            tick += 1
         end
-        timer_on_off = false
+        
+        # timer_num = timer_len
+        # timer_len.downto(0) do |seconds|
+        #   timer_num =  (t + seconds).strftime('%M:%S')
+        #   timer_clock.text = "#{timer_len}"
+        #    sleep 1
+        #    #timer_clock.text = "#{timer_len}"
+        #    puts timer_clock.text
+        #   # puts timer_num
+        #   break if stop_timer == true
+        # end
+        # timer_on_off = false
 
 
         # stores the pomodoro time and the date into the csv array - will be converted to a csv file soon
