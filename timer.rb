@@ -14,7 +14,7 @@ def csv_check(file_name, array)
     else 
         # creates new file for user 
         puts 'File was not found to store the data, so this program will generate a new one.'
-        headers = ["Timestamp", "PomodoroLength"]
+        headers = ["Timestamp", "Length", "Type"]
         CSV.open(file_name, "w") do |csv|
             csv << headers
             array.each do |pomtime|
@@ -37,6 +37,7 @@ timer_num = '00:00:00'
 timer_len = 0
 timer_on_off = false
 pomodoro_on_off = false
+break_on_off = false
 stop_timer = false
 settings_on_off = false
 csv_array = Array.new
@@ -77,6 +78,7 @@ on :mouse_down do |event|
     # if short break clicked - timer length is 300
     if short_text.contains? event.x, event.y
         timer_len = 300
+        break_on_off = true
         timer_clock.text = seconds_to_hms(300)
 
     end
@@ -84,6 +86,7 @@ on :mouse_down do |event|
     # if long break clicked - len is 900
     if long_text.contains? event.x, event.y
         timer_len = 900
+        break_on_off = true
         timer_clock.text = seconds_to_hms(900)
 
     end
@@ -105,7 +108,7 @@ on :mouse_down do |event|
     if settings_text.contains? event.x, event.y
         settings_on_off = true
     end
-    
+
 end
 
 tick = 0
@@ -134,14 +137,20 @@ update do
         # stores the pomodoro time and the date into the csv array - will be converted to a csv file soon
         if pomodoro_on_off == true
             csv_pomodoro = timer_len
-            # puts "csv_pomodoro is #{csv_pomodoro}"
-            csv_array << [csv_time, csv_pomodoro]
-            # puts csv_array
+            csv_array << [csv_time, csv_pomodoro, "pomodoro"]
             csv_check("pomodoro.csv", csv_array)
             csv_array.pop
             pomodoro_on_off = false
         end
-      
+        
+        if break_on_off == true
+            csv_break = timer_len
+            csv_array << [csv_time, csv_break, "break"]
+            csv_check("pomodoro.csv", csv_array)
+            csv_array.pop
+            break_on_off = false
+        end
+            
     end
 
     # if settings text is clicked, the user can choose to change the time for pomodoro, short break, or long break
@@ -158,13 +167,13 @@ update do
         if input == "Short break"
             print "Enter the amount of minutes for Short break: "
             timer_len = gets.chomp.to_i * 60
-            pomodoro_on_off = false # makes sure that this time is not stored into the csv file
+            break_on_off = true 
         end
 
         if input == "Long break"
             print "Enter the amount of minutes for Long break: "
             timer_len = gets.chomp.to_i * 60
-            pomodoro_on_off = false # makes sure that this time is not stored into the csv file
+            break_on_off = true 
         end
         timer_on_off = true
         settings_on_off = false
