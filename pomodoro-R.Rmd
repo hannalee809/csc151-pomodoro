@@ -1,0 +1,17 @@
+```{r}
+# need to install.packages for ggplot2, tidyverse, lubricate
+
+library(ggplot2)
+library(tidyverse)
+library(lubridate)
+pomodoro <- read_csv("pomodoro.csv")
+```
+
+```{r}
+pomodoro %>% 
+  mutate(date = date(Timestamp), pom_length = PomodoroLength/60) %>% 
+  ggplot(aes(x = date, y = pom_length)) + geom_histogram(stat = "identity", fill = "darksalmon") + xlab("Date") + ylab("Length of Pomodoro (in minutes)") + ggtitle("Pomodoro Timer Usage") + theme_minimal() 
+
+
+```
+
