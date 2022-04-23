@@ -1,6 +1,7 @@
 # Starter file for timer app
 require 'ruby2d'
 require 'csv'
+sound = Sound.new('bell.wav')
 
 
 # Checks to see if there is an existing pomodoro csv file for user, if not, creates a file to store the pomodoro data
@@ -70,9 +71,9 @@ on :mouse_down do |event|
 
     # if pomodoro text clicked - timer length is 1500
     if pom_text.contains? event.x, event.y
-       timer_len = 1500
+       timer_len = 5
        pomodoro_on_off = true
-       timer_clock.text = seconds_to_hms(1500)
+       timer_clock.text = seconds_to_hms(5)
     end
 
     # if short break clicked - timer length is 300
@@ -93,7 +94,6 @@ on :mouse_down do |event|
 
     # if start is clicked, timer_on_off is true so this goes to start the timer
     if start_text.contains? event.x, event.y
-        puts timer_len
         timer_on_off = true
     end
     
@@ -123,6 +123,7 @@ update do
         t = Time.new(0)
         # this closes the timer once it is 00:00:00
         if timer_len == 0
+            sound.play
             timer_on_off == false
         else
             # every second that passes the timer len decreases by 1 and this is displayed on the timer output
