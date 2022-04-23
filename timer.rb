@@ -1,20 +1,19 @@
 # Starter file for timer app
-#$: << "."
 require 'ruby2d'
 require 'csv'
-#require './settings.rb'
 
 
+# Checks to see if there is an existing pomodoro csv file for user, if not, creates a file to store the pomodoro data
 def csv_check(file_name, array)
     if(File.exist?(file_name))
-        puts 'file exists'
         CSV.open(file_name, "a") do |csv|
             array.each do |pomtime|
                 csv << pomtime
             end
         end
     else 
-        puts 'file does not found'
+        # creates new file for user 
+        puts 'File was not found to store the data, so this program will generate a new one.'
         headers = ["Timestamp", "PomodoroLength"]
         CSV.open(file_name, "w") do |csv|
             csv << headers
@@ -60,25 +59,23 @@ long_text = Text.new('Long Break', x: 475, y: 130, size: 20)
 timer_clock = Text.new("#{timer_num}", x: 260, y: 200, size: 75)
 settings_text = Text.new('Settings', x: 700, y: 10, size: 20, color: '#4297A0')
 
-
+# function to convert the number of seconds into hour:min:seconds for the timer display
 def seconds_to_hms(sec)
     "%02d:%02d:%02d" % [sec / 3600, sec / 60 % 60, sec % 60]
 end
 
+# ruby 2d function that gets input from what the user clicks on the window
 on :mouse_down do |event|
 
-    # if pomodoro text clicked - len is 1500
+    # if pomodoro text clicked - timer length is 1500
     if pom_text.contains? event.x, event.y
-       puts "Pomodoro" 
        timer_len = 1500
        pomodoro_on_off = true
        timer_clock.text = seconds_to_hms(1500)
     end
 
-    # if short break clicked - len is 300
+    # if short break clicked - timer length is 300
     if short_text.contains? event.x, event.y
-        puts "Short Break"
-        #Timer.new.timer_start(len = 300)
         timer_len = 300
         timer_clock.text = seconds_to_hms(300)
 
@@ -86,29 +83,29 @@ on :mouse_down do |event|
 
     # if long break clicked - len is 900
     if long_text.contains? event.x, event.y
-        puts "Long break"
         timer_len = 900
         timer_clock.text = seconds_to_hms(900)
 
     end
 
+    # if start is clicked, timer_on_off is true so this goes to start the timer
     if start_text.contains? event.x, event.y
         puts timer_len
         timer_on_off = true
     end
- 
+    
+    # stops the timer
     if stop_text.contains? event.x, event.y
         stop_timer = true
         timer_on_off = false
         csv_array.pop
     end
 
+    # settings is clicked then goes to the settings function
     if settings_text.contains? event.x, event.y
-        puts "settings clicked"
         settings_on_off = true
-        
-
     end
+    
 end
 
 tick = 0
@@ -121,9 +118,11 @@ update do
 
         # for the countdown
         t = Time.new(0)
+        # this closes the timer once it is 00:00:00
         if timer_len == 0
             timer_on_off == false
         else
+            # every second that passes the timer len decreases by 1 and this is displayed on the timer output
             if tick % 60 == 0
                 timer_len -= 1
                 timer_clock.text = seconds_to_hms(timer_len)
@@ -152,18 +151,20 @@ update do
 
         if input == "Pomodoro"
             print "Enter an amount of minutes for Pomodoro timer: "
-            timer_len = gets.chomp.to_i
-            pomodoro_on_off = true
+            timer_len = gets.chomp.to_i * 60 # to convert minutes to seconds for the seconds_to_hms function
+            pomodoro_on_off = true # makes sure that this time is stored into the csv file
         end
 
         if input == "Short break"
             print "Enter the amount of minutes for Short break: "
-            timer_len = gets.chomp.to_i
+            timer_len = gets.chomp.to_i * 60
+            pomodoro_on_off = false # makes sure that this time is not stored into the csv file
         end
 
         if input == "Long break"
             print "Enter the amount of minutes for Long break: "
-            timer_len = gets.chomp.to_i
+            timer_len = gets.chomp.to_i * 60
+            pomodoro_on_off = false # makes sure that this time is not stored into the csv file
         end
         timer_on_off = true
         settings_on_off = false
