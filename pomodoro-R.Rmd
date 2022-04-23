@@ -9,8 +9,8 @@ pomodoro <- read_csv("pomodoro.csv")
 
 ```{r}
 pomodoro %>% 
-  mutate(date = date(Timestamp), pom_length = PomodoroLength/60) %>% 
-  ggplot(aes(x = date, y = pom_length)) + geom_histogram(stat = "identity", fill = "darksalmon") + xlab("Date") + ylab("Length of Pomodoro (in minutes)") + ggtitle("Pomodoro Timer Usage") + theme_minimal() 
+  mutate(date = date(Timestamp), time_length = Length/60) %>% 
+  ggplot(aes(x = date, y = time_length, fill = Type)) + geom_histogram(stat = "identity") + xlab("Date") + ylab("Length of Pomodoro (in minutes)") + ggtitle("Pomodoro Timer Usage") + theme_minimal() 
 
 
 ```
