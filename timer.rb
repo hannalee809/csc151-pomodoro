@@ -71,7 +71,7 @@ on :mouse_down do |event|
 
     # if pomodoro text clicked - timer length is 1500
     if pom_text.contains? event.x, event.y
-       timer_len = 5
+       timer_len = 1500
        pomodoro_on_off = true
        timer_clock.text = seconds_to_hms(5)
     end
