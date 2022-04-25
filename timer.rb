@@ -71,9 +71,9 @@ on :mouse_down do |event|
 
     # if pomodoro text clicked - timer length is 1500
     if pom_text.contains? event.x, event.y
-       timer_len = 1500
+       timer_len = 5
        pomodoro_on_off = true
-       timer_clock.text = seconds_to_hms(1500)
+       timer_clock.text = seconds_to_hms(5)
     end
 
     # if short break clicked - timer length is 300
@@ -119,8 +119,8 @@ update do
         csv_time = Time.now
         
 
-        # for the countdown
-        t = Time.new(0)
+    # for the countdown
+
         # this closes the timer once it is 00:00:00
         if timer_len == 0
             sound.play
