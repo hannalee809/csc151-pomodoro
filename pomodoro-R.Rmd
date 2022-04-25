@@ -11,7 +11,7 @@ pomodoro <- read_csv("pomodoro.csv")
 ## creates a visualization of how much you have studied and how long you have taken breaks
 pomodoro %>% 
   mutate(date = date(Timestamp), time_length = Length/60) %>% 
-  ggplot(aes(x = date, y = time_length, fill = Type, color = Type)) + geom_histogram(alpha = 0.5, stat = "identity") + xlab("Date") + ylab("Length of Pomodoro (in minutes)") + ggtitle("Pomodoro Timer Usage") + theme_minimal() 
+  ggplot(aes(x = date, y = time_length, fill = Type, color = Type)) + geom_histogram(alpha = 0.5, stat = "identity") + xlab("Date") + ylab("Length of Pomodoro (in minutes)") + ggtitle("Timer Length") + theme_minimal() 
 
 ```
 
